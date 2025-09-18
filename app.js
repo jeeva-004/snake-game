@@ -1,7 +1,12 @@
-const gameBoard = document.querySelector('#board');
-const context = gameBoard.getContext('2d');
+const gameBoard = document.querySelector('#board'), context = gameBoard.getContext('2d');
+let scoreValue =  document.querySelector('span');
 const WIDTH = gameBoard.width, HEIGHT = gameBoard.height, UNIT = 25;
-let foodX, foodY, xVel = 25, yVel = 0, snake = [{x:UNIT*3, y:0}, {x:UNIT*2, y:0}, {x:UNIT, y:0}, {x:0, y:0}];
+let foodX, foodY, xVel = 25, yVel = 0, 
+snake = [
+    {x:UNIT*3, y:0}, {x:UNIT*2, y:0}, {x:UNIT, y:0}, {x:0, y:0}
+], active = true, isStart = false;
+
+window.addEventListener('keydown', keypress);
 
 startGame();
 
@@ -10,20 +15,38 @@ function startGame(){
     context.fillRect(0, 0, WIDTH, HEIGHT);
     createFood();
     displayFood();
-    // drawSnake();
-    // moveSnake();
-    // clearBoard();
-    nextTick();
-    // drawSnake();
+    drawSnake();
 }
 
 function nextTick(){
+    if(active){
     setTimeout(()=>{
         clearBoard();
+        displayFood();
         moveSnake();
         drawSnake();
+        checkGameOver();
         nextTick();
-    }, 100)
+    }, 200)
+}
+else{
+    clearBoard();
+    context.font = 'bold 30px serif';
+    context.fillStyle = 'White';
+    context.textAlign = 'center';
+    context.fillText(`Game Over! \n Press enter to start.`, WIDTH/2, HEIGHT/2);
+}
+}
+
+function checkGameOver(){
+    switch(true){
+        case snake[0].x<0:
+        case snake[0].x>=WIDTH:
+        case snake[0].y<0:
+        case snake[0].y>=HEIGHT:
+            active = false;
+            break;
+    }
 }
 
 function createFood(){
@@ -48,8 +71,41 @@ function drawSnake(){
     })
 }
 
+let score = 0;
+
 function moveSnake(){
     const head = {x: snake[0].x+xVel, y: snake[0].y+yVel};
     snake.unshift(head);
-    snake.pop();
+    if(snake[0].x==foodX&&snake[0].y==foodY){
+        score +=1;
+        scoreValue.innerHTML = score;
+        createFood();
+    }
+    else
+        snake.pop();
+}
+
+function keypress(e){
+    if(!isStart){
+        isStart= true;
+        nextTick();
+    }
+    const LEFT = 37, UP = 38, RIGHT = 39, DOWN = 40;
+    switch(true){
+        case (e.keyCode==LEFT && xVel!=UNIT):
+            xVel = -UNIT;
+            yVel =  0;
+            break;
+        case (e.keyCode==UP && yVel!=UNIT):
+            yVel = -UNIT;
+            xVel = 0;
+            break;
+        case (e.keyCode==RIGHT && xVel!=-UNIT):
+            xVel = UNIT;
+            yVel = 0;
+            break;
+        case (e.keyCode==DOWN && yVel!=-UNIT):
+            yVel = UNIT;
+            xVel = 0;
+    }
 }
