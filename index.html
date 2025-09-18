@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            text-align: center;
+            background-color: hsl(69, 71%, 79%);
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        p{
+            margin: 5px 0 15px;
+            font-size: .9em;
+        }
+
+        canvas{
+            border: 5px solid black;
+            border-radius: 10px;
+            margin: 10px;
+        }
+
+
+    </style>
+    <script src="./app.js" defer></script>
+</head>
+<body>
+    <h1>Snake Game</h1>
+    <p>Enter any arrow key to start the game.</p>
+    <canvas id="board" width="500" height="500"></canvas>
+    <h3>Score : <span>0</span></h3>
+</body>
+</html>
